@@ -1,6 +1,8 @@
 package doodlejump;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -14,8 +16,15 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage primaryStage) {
         // Instantiate top-level object, set up the scene, and show the stage here.
+        PaneOrganizer organizer = new PaneOrganizer();
+        Scene scene = new Scene(organizer.getRoot());
+        primaryStage.setWidth(Constants.GAME_PANE_WIDTH);
+        primaryStage.setHeight(Constants.GAME_PANE_HEIGHT + 120);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Doodle Jump");
+        primaryStage.show();
     }
 
     /*

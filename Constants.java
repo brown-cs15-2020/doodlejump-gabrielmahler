@@ -27,4 +27,21 @@ public class Constants {
     public static final int DOODLE_WIDTH = 20; // (UNITS: pixels)
     public static final int DOODLE_HEIGHT = 40; // (UNITS: pixels)
 
+    public static final int GAME_PANE_HEIGHT = 700;
+    public static final int GAME_PANE_WIDTH = 500;
+
+    public static final int DOODLE_BODY_HEIGHT = 25;
+    public static final int DOODLE_BODY_WIDTH = 15;
+    public static final int DOODLE_INITIAL_X = 250;
+    public static final int DOODLE_INITIAL_Y = 650;
+    public static final int DOODLE_MOVE_X = 15;
+
+    public static final int PLATFORM_Y_SPAWN_MAX = 200; // weird, should be figured out better somehow
+    public static final int PLATFORM_Y_SPAWN_MIN = 2 * DOODLE_BODY_HEIGHT;
+
+    public static final int PLATFORM_X_SPAWN_DIFF = 0; // have to figure out what this is equal to app
+
+
+    public static final int PLATFORM_MAX_NO = GAME_PANE_HEIGHT / PLATFORM_Y_SPAWN_MIN;
+
 }
