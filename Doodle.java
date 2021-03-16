@@ -41,8 +41,9 @@ public class Doodle {
         }
     }
 
-    public void doodleYMove(double newPosition) {
-        _body.setCenterY(newPosition);
+    public void doodleYMove(double currentVelocity) {
+        double currentPos = _body.getCenterY();
+        _body.setCenterY(currentPos + currentVelocity*0.02);
     }
 
 

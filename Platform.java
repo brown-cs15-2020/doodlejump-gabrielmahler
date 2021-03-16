@@ -8,16 +8,20 @@ public class Platform {
     Rectangle _rectangle;
     int leftOrRight;
     double moveTo;
+    double locX;
+    double locY;
 
-    public Platform(Pane gamePane, double prevYLoc, double prevXLoc) {
+
+    public Platform(Pane gamepane, double prevYLoc, double prevXLoc) {
         _rectangle = new Rectangle();
         _rectangle.setWidth(Constants.PLATFORM_WIDTH);
         _rectangle.setHeight(Constants.PLATFORM_HEIGHT);
         _rectangle.setFill(Color.BLACK);
-        _rectangle.setLayoutX(findNewXLoc(prevXLoc));
-        _rectangle.setLayoutY(findNewYLoc(prevYLoc));
+        _rectangle.setLayoutX(prevXLoc);
+        _rectangle.setLayoutY(prevYLoc);
+        gamepane.getChildren().add(_rectangle);
 
-        gamePane.getChildren().add(_rectangle);
+//        gamePane.getChildren().add(_rectangle);
     }
 
     public double findNewXLoc(double prevLoc){
@@ -31,7 +35,9 @@ public class Platform {
         if(moveTo <= Constants.PLATFORM_WIDTH/2 || moveTo >= Constants.GAME_PANE_WIDTH - Constants.PLATFORM_WIDTH/2) {
             moveTo = moveTo * -1;
         }
+        System.out.println("new x: " + moveTo);
         return moveTo;
+
     }
 
     public double findNewYLoc(double prevLoc) {
@@ -39,4 +45,22 @@ public class Platform {
         return (prevLoc - randomDifferencePlatforms);
 
     }
+
+    public double getLocX() {
+        return _rectangle.getLayoutX();
+    }
+    public double getLocY() {
+        return _rectangle.getLayoutY();
+    }
+
+    public void moveDown(double currentVelocity) {
+        double currentX = _rectangle.getLayoutX();
+        double currentPosition = _rectangle.getLayoutY();
+        _rectangle.setLayoutY(currentPosition - currentVelocity*0.02);
+
+    }
+
+
+
+
 }

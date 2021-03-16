@@ -13,55 +13,77 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+
 public class Game {
     double currentVelocity;
     double currentYPosition;
+
     Doodle _doodle;
+    Platform testingPlatform;
 
-    Platform[] _arrayPlatforms;
+    double previousPlatformX;
+    double previousPlatformY;
 
-    Platform _platform; // gonna have to be deleted and changed as a part of an array
+    ArrayList<Platform> _arrayPlatforms;
 
-    double randomDifferencePlatforms;
+    Pane gameplayPane;
+
+    Platform topPlatform;
+
+    double moveTo;
+    int leftOrRight;
+
+    boolean topPlatformOutOfBounds;
+    int topPlatNumber;
+
+
+
 
     boolean contactWithPlatform;
 
 
     public Game(Pane gamePane, BorderPane buttonPane) {
+
         this.setupTimeline(true); // true can be removed if unecessary
+        _arrayPlatforms = new ArrayList<>();
+
+        // working code
+        gameplayPane = gamePane;
         _doodle = new Doodle(gamePane);
         gamePane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler());
         gamePane.setFocusTraversable(true);
         this.setupQuitButton(buttonPane);
-        this.createPlatforms(gamePane);
         contactWithPlatform = false;
-
         currentYPosition = Constants.DOODLE_INITIAL_Y;
-        currentVelocity = Constants.REBOUND_VELOCITY;
+        currentVelocity = 0; // initial velocity i think
+        topPlatformOutOfBounds = false;
+
+        _arrayPlatforms.add(new Platform(gameplayPane, Constants.DOODLE_INITIAL_Y+Constants.DOODLE_BODY_HEIGHT/2+10, Constants.DOODLE_INITIAL_X));
 
     }
 
-    public void createPlatforms(Pane gamePane) {
-        _arrayPlatforms = new Platform[Constants.PLATFORM_MAX_NO];
-        double prevPlatformY = 0;
-        double prevPlatformX = 0;
-        for (int i = 0; i < _arrayPlatforms.length; i++) {
-            if (i == 0) {
-                prevPlatformX = (int)(Math.random()*(Constants.GAME_PANE_WIDTH - Constants.PLATFORM_WIDTH/2)+Constants.PLATFORM_WIDTH/2);
-                prevPlatformY = Constants.DOODLE_INITIAL_Y;
-            }
-            else {
-                prevPlatformX = _arrayPlatforms[i-1]._rectangle.getX();
-                prevPlatformY = _arrayPlatforms[i-1]._rectangle.getY();
-                System.out.println("new plat");
-            }
-            _arrayPlatforms[i] = new Platform(gamePane, prevPlatformY, prevPlatformX);
-        }
-    }
+//    public void createPlatforms(Pane gamePane) {
+//        _arrayPlatforms = new ArrayList<>();
+//        double prevPlatformY;
+//        double prevPlatformX;
+//        for (int i = 0; i < Constants.PLATFORM_MAX_NO; i++) {
+//            if (i == 0) {
+//                prevPlatformX = (int)(Math.random()*(Constants.GAME_PANE_WIDTH - Constants.PLATFORM_WIDTH/2)+Constants.PLATFORM_WIDTH/2);
+//                prevPlatformY = Constants.DOODLE_INITIAL_Y;
+//            }
+//            else {
+//                int n = i-1;
+//                prevPlatformX = _arrayPlatforms.get(n).getLocX();
+//                prevPlatformY = _arrayPlatforms.get(n).getLocY();
+//            }
+//            _arrayPlatforms.add(new Platform(gamePane, prevPlatformY, prevPlatformX));
+//        }
+//    }
 
 
     public void setupTimeline(boolean OnOrOff) { // OnOrOff boolean - false -> pauses the timeline
-        KeyFrame kf = new KeyFrame(Duration.millis(30), new TimeHandler()); //useing 20 milliseconds as a duration of one frame
+        KeyFrame kf = new KeyFrame(Duration.millis(20), new TimeHandler()); //useing 20 milliseconds as a duration of one frame
         Timeline timeline = new Timeline(kf);
         timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -72,11 +94,12 @@ public class Game {
         }
     }
 
-    public void checkContactWPlatform(Platform[] platforms) {
-        for (int i = 0; i < platforms.length; i++) {
-            if (_doodle._body.getBoundsInParent().intersects((platforms[i]._rectangle.getBoundsInParent()))) {
+    public void checkContactWPlatform(ArrayList<Platform> platforms) {
+        for (int i = 0; i < platforms.size() - 1; i++) {
+            if (_doodle._body.getBoundsInParent().intersects((platforms.get(i)._rectangle.getBoundsInParent()))) {
                 contactWithPlatform = true;
                 break;
+
             }
             else{
                 contactWithPlatform = false;
@@ -85,26 +108,117 @@ public class Game {
 
     }
 
+    public double findNewXLoc(double prevLoc){
+        if((int)(Math.random())>0.5) {
+            leftOrRight = -1;
+        }
+        else {
+            leftOrRight = 1;
+        }
+        moveTo = prevLoc + leftOrRight * (int)(Math.random()*Constants.PLATFORM_X_SPAWN_DIFF);
+        if(moveTo <= Constants.PLATFORM_WIDTH/2 || moveTo >= Constants.GAME_PANE_WIDTH - Constants.PLATFORM_WIDTH/2) {
+            moveTo = moveTo * -1;
+        }
+        return moveTo;
+
+    }
+
+    public double findNewYLoc(double prevLoc) {
+        double randomDifferencePlatforms = ((int) (Math.random() * (Constants.PLATFORM_Y_SPAWN_MAX - Constants.PLATFORM_Y_SPAWN_MIN) + Constants.PLATFORM_Y_SPAWN_MIN));
+        return (prevLoc - randomDifferencePlatforms);
+    }
+
+    public boolean isTopPlatOnScreen(Platform platform) {
+        if (platform._rectangle.getLayoutY() < 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+
     private class TimeHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            checkContactWPlatform(_arrayPlatforms);
 
-            if (contactWithPlatform) {
-                currentVelocity = Constants.REBOUND_VELOCITY;
-                System.out.println("contact");
+            /**
+             * working code bellow
+             */
+
+
+
+            /**
+             * 2nd attempt
+             */
+            topPlatNumber = _arrayPlatforms.size() - 1;
+            System.out.println(_arrayPlatforms.get(topPlatNumber).getLocY());
+
+//            topPlatform = _arrayPlatforms.get(_arrayPlatforms.size());
+//            topPlatformOutOfBounds = isTopPlatOnScreen(_arrayPlatforms.get(_arrayPlatforms.size()));
+            while (_arrayPlatforms.get(topPlatNumber).getLocY() > 0) {
+                int numberOfPreviousTopPlatform = _arrayPlatforms.size() - 1;
+                _arrayPlatforms.add(new Platform(gameplayPane, findNewYLoc(_arrayPlatforms.get(numberOfPreviousTopPlatform)._rectangle.getLayoutY()), findNewXLoc(_arrayPlatforms.get(numberOfPreviousTopPlatform)._rectangle.getLayoutX())));
+                topPlatNumber += 1;
+//                System.out.println("new [latform");
             }
-            if (_doodle._body.getCenterY() > Constants.DOODLE_INITIAL_Y) {
+            topPlatform = _arrayPlatforms.get(topPlatNumber);
+
+            checkContactWPlatform(_arrayPlatforms);
+            if(contactWithPlatform) {
                 currentVelocity = Constants.REBOUND_VELOCITY;
-//                System.out.println("true");
             }
+
             currentVelocity = currentVelocity + Constants.GRAVITY*0.02;
             currentYPosition = currentYPosition + currentVelocity*0.02;
-            _doodle.doodleYMove(currentYPosition);
-//            System.out.println(currentYPosition);
-            if (currentVelocity == 0) {
-                System.out.println(currentYPosition);
+
+            _doodle.doodleYMove(currentVelocity);
+
+            if(currentVelocity >= 0) {
+                _doodle.doodleYMove(currentVelocity);
             }
+            else{
+                if(_doodle._body.getCenterY() <= Constants.GAME_PANE_HEIGHT/2) {
+                    for (int i = 0; i < _arrayPlatforms.size()-1; i++) {
+                        _arrayPlatforms.get(i).moveDown(currentVelocity);
+                    }
+                }
+                else {
+                    _doodle.doodleYMove(currentVelocity);
+                }
+            }
+
+            /**
+             * 1st attempt
+             */
+
+//            if (contactWithPlatform) {
+//                currentVelocity = Constants.REBOUND_VELOCITY;
+//            }
+//            if (_doodle._body.getCenterY() > Constants.DOODLE_INITIAL_Y) {
+//                currentVelocity = Constants.REBOUND_VELOCITY;
+//            }
+//
+//
+////            _doodle.doodleYMove(currentVelocity);
+//
+//            if(currentVelocity >= 0) {
+//                _doodle.doodleYMove(currentVelocity); // moving the doodle
+//
+//            }
+//            else{
+//                if(_doodle._body.getCenterY() >= Constants.GAME_PANE_HEIGHT/2) {
+//                    _doodle.doodleYMove(currentVelocity);
+//                }
+//                else{
+//                    for(Platform platform: _arrayPlatforms){
+//                        platform.moveDown(currentVelocity);
+//
+//                    }
+////                    System.out.println(testingPlatform._rectangle.getY());
+//                    testingPlatform.moveDown(currentVelocity);
+//                }
+//                }
         }
     }
 
@@ -115,11 +229,9 @@ public class Game {
             switch (keyPressed){
                 case LEFT:
                     _doodle.doodleMoveLeft();
-                    System.out.println("moveleft");
                     break;
                 case RIGHT:
                     _doodle.doodleMoveRight();
-                    System.out.println("moveright");
                     break;
                 default:
                     break;
@@ -140,6 +252,4 @@ public class Game {
         b1.setOnAction(new quitHandler());
         pane.setCenter(b1);
     }
-
-
 }
