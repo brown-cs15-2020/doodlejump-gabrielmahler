@@ -17,8 +17,8 @@ public class Platform {
         _rectangle.setWidth(Constants.PLATFORM_WIDTH);
         _rectangle.setHeight(Constants.PLATFORM_HEIGHT);
         _rectangle.setFill(Color.BLACK);
-        _rectangle.setLayoutX(prevXLoc);
-        _rectangle.setLayoutY(prevYLoc);
+        _rectangle.setX(prevXLoc);
+        _rectangle.setY(prevYLoc);
         gamepane.getChildren().add(_rectangle);
 
 //        gamePane.getChildren().add(_rectangle);
@@ -50,13 +50,14 @@ public class Platform {
         return _rectangle.getLayoutX();
     }
     public double getLocY() {
-        return _rectangle.getLayoutY();
+        return _rectangle.getY();
     }
 
     public void moveDown(double currentVelocity) {
         double currentX = _rectangle.getLayoutX();
-        double currentPosition = _rectangle.getLayoutY();
-        _rectangle.setLayoutY(currentPosition - currentVelocity*0.02);
+        double currentPosition = _rectangle.getY();
+        _rectangle.setY(currentPosition - currentVelocity*0.02);
+        System.out.println(_rectangle.getY());
 
     }
 

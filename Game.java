@@ -109,17 +109,19 @@ public class Game {
     }
 
     public double findNewXLoc(double prevLoc){
-        if((int)(Math.random())>0.5) {
+        if(Math.random()>0.5) {
             leftOrRight = -1;
         }
         else {
             leftOrRight = 1;
         }
-        moveTo = prevLoc + leftOrRight * (int)(Math.random()*Constants.PLATFORM_X_SPAWN_DIFF);
-        if(moveTo <= Constants.PLATFORM_WIDTH/2 || moveTo >= Constants.GAME_PANE_WIDTH - Constants.PLATFORM_WIDTH/2) {
+        moveTo = leftOrRight * ((int)(Math.random()*Constants.PLATFORM_X_SPAWN_DIFF));
+//        System.out.println(moveTo);
+        if(moveTo + prevLoc >= (Constants.GAME_PANE_WIDTH - Constants.PLATFORM_WIDTH/2) || moveTo + prevLoc < 0) {
             moveTo = moveTo * -1;
         }
-        return moveTo;
+
+        return moveTo+prevLoc;
 
     }
 
@@ -129,7 +131,7 @@ public class Game {
     }
 
     public boolean isTopPlatOnScreen(Platform platform) {
-        if (platform._rectangle.getLayoutY() < 0){
+        if (platform._rectangle.getY() < 0){
             return false;
         }
         else{
@@ -158,9 +160,8 @@ public class Game {
 //            topPlatformOutOfBounds = isTopPlatOnScreen(_arrayPlatforms.get(_arrayPlatforms.size()));
             while (_arrayPlatforms.get(topPlatNumber).getLocY() > 0) {
                 int numberOfPreviousTopPlatform = _arrayPlatforms.size() - 1;
-                _arrayPlatforms.add(new Platform(gameplayPane, findNewYLoc(_arrayPlatforms.get(numberOfPreviousTopPlatform)._rectangle.getLayoutY()), findNewXLoc(_arrayPlatforms.get(numberOfPreviousTopPlatform)._rectangle.getLayoutX())));
+                _arrayPlatforms.add(new Platform(gameplayPane, findNewYLoc(_arrayPlatforms.get(numberOfPreviousTopPlatform)._rectangle.getY()), findNewXLoc(_arrayPlatforms.get(numberOfPreviousTopPlatform)._rectangle.getX())));
                 topPlatNumber += 1;
-//                System.out.println("new [latform");
             }
             topPlatform = _arrayPlatforms.get(topPlatNumber);
 
@@ -172,7 +173,7 @@ public class Game {
             currentVelocity = currentVelocity + Constants.GRAVITY*0.02;
             currentYPosition = currentYPosition + currentVelocity*0.02;
 
-            _doodle.doodleYMove(currentVelocity);
+//            _doodle.doodleYMove(currentVelocity);
 
             if(currentVelocity >= 0) {
                 _doodle.doodleYMove(currentVelocity);
