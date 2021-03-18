@@ -1,0 +1,27 @@
+DoodleJump README
+
+Handin:
+	This is my final handin.
+
+Overview:
+	I believe I have managed to sucessfully create the Doodle Jump project. Everything works well, I have not,
+however, added any bells and whistles (as I was initially planning on), because I didn't have enough time unfortunately.
+My Doodle Jump has 7 classes:
+	- App, which sets up the stage and lauches the top level class
+	- Paneorganizer which sets up used panes
+	- Game which containts the vast majority of game logic, including event handlers
+	- Constants which contains constants used for the project
+	- Platform which defines platforms and methods to work with them
+	- Doodle which constructs the doodle and methods to work with it
+	- GameOverRect which defines the rectangle, which shows up when the game is over
+
+Design Choices:
+	I don't think I have made any unusual design choices - I have followed the handout which didn't give too
+much space for own design creativity.	
+
+Known Bugs:
+	None.
+
+Hours:
+	I think this project could have taken me around 12 hours to complete.
+
